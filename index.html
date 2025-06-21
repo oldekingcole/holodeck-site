@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-  if (location.hostname === "www.holodeck.xr.hns.to") {
-    location.href = location.protocol + "//holodeck.xr.hns.to" + location.pathname + location.search + location.hash;
-  }
-</script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -441,6 +436,15 @@
     </style>
 </head>
 <body>
+  <script>
+    // Redirect www.holodeck.xr.hns.to → holodeck.xr.hns.to
+    if (location.hostname !== "holodeck.xr.hns.to") {
+      const target = location.protocol + "//holodeck.xr.hns.to" +
+                     location.pathname + location.search + location.hash;
+      location.replace(target); // use replace() to avoid polluting browser history
+    }
+  </script>
+
 
     <!-- Navigation Bar -->
     <nav class="navbar">
