@@ -233,7 +233,7 @@
         
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: 1fr; /* Default to a single column for mobile */
             gap: 2rem;
             text-align: center;
             max-width: 1200px;
@@ -399,7 +399,15 @@
         /* =================================================================
         Responsive Design
         ================================================================= */
-        @media (max-width: 768px) {
+        
+        @media (min-width: 768px) {
+            .grid {
+                /* On tablets and larger, create a 2-column grid */
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 767px) {
             .navbar {
                 flex-direction: column;
                 padding: 1rem;
