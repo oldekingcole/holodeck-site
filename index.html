@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Holodeck | High-Fidelity Wireless VR</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =================================================================
+        Base Styles & Typography
+        ================================================================= */
+        :root {
+            --primary-color: #00BFFF; /* Deep Sky Blue */
+            --primary-hover-color: #40DFFF; /* Lighter shade of blue for hover */
+            --accent-color-purple: #9370DB; /* Medium Purple */
+            --background-color: #02040a;
+            --surface-color: #0a0e14;
+            --text-color: #EAEAEA;
+            --text-muted-color: #8892b0;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            line-height: 1.7;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        
+        h1, h2 {
+           text-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            color: var(--text-muted-color);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+        
+        /* =================================================================
+        Navigation Bar
+        ================================================================= */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2.5rem;
+            background-color: rgba(2, 4, 10, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-brand a {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color-purple));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* =================================================================
+        Hero Section
+        ================================================================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            /* Embedded Base64 SVG as a reliable background */
+            background-image: linear-gradient(rgba(2, 4, 10, 0.7), rgba(2, 4, 10, 1)), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIwIDEwODAiPgo8ZmlsdGVyIGlkPSJub2lzZSI+CiAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz4KICA8ZmVEaWZmdXNlTGlnaHRpbmcgc3VyZmFjZVNjYWxlPSIxMCIgbGlnaHRpbmdDb2xvcj0iIzAwYmZmZiI+CiAgICA8ZmVEaXN0YW50TGlnaHQgYXppbXV0aD0iMjIwIiBlbGV2YXRpb249IjgwIi8+CiAgPC9mZURpZmZ1c2VMaWdodGluZz4KPC9maWx0ZXI+CjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwMjA0MGEiLz4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4xNSIvPgo8bGluZSB4MT0iMCIgeTE9IjQwJSIgeDI9IjEwMCUiIHkyPSI0MCUiIHN0cm9rZT0iIzAwYmZmZiIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjMiLz4KPGxpbmUgeDE9IjAiIHkxPSI2MCUiIHgyPSIxMDAlIiB5Mj0iNjAlIiBzdHJva2U9IiMwMGJmZmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC4zIi8+CjxwYXRoIGQ9Ik0wIDMwMEMzMjAgMjAwIDY0MCAyMDAgOTYwIDMwMEMxMjgwIDQwMCAxNjAwIDQwMCAxOTIwIDMwMFYxMDgwSDBaIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGJmZmYiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg==');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        
+        /* Subtle scrolling dot grid overlay, also embedded */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJub25lIi8+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==');
+            background-repeat: repeat;
+            pointer-events: none;
+            animation: pan-overlay 20s linear infinite;
+        }
+
+        @keyframes pan-overlay {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            max-width: 650px;
+            color: var(--text-muted-color);
+            font-weight: 400;
+            position: relative;
+        }
+
+        .cta-button {
+            padding: 1rem 2.5rem;
+            background-color: var(--primary-color);
+            color: #02040a;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 191, 255, 0.2);
+            position: relative;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background-color: var(--primary-hover-color);
+            color: #02040a; /* Ensure text color stays dark on hover */
+            box-shadow: 0 6px 30px rgba(0, 191, 255, 0.3);
+        }
+
+        /* =================================================================
+        Content Sections & Reveal Animation
+        ================================================================= */
+        .section {
+            padding: 7rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, rgba(147, 112, 219, 0.05) 0%, transparent 50%);
+        }
+        
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-dark {
+             background-color: var(--surface-color);
+             background-image: radial-gradient(circle at center, rgba(147, 112, 219, 0.07) 0%, transparent 60%);
+        }
+        
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-subtitle {
+            margin-bottom: 5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            background: rgba(10, 14, 20, 0.5);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .grid-item:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-color-purple);
+        }
+        
+        .grid-item-icon {
+            height: 60px;
+            width: 60px;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .grid-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: none;
+        }
+        
+        .grid-item p {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* =================================================================
+        Case Study Section
+        ================================================================= */
+        .case-study-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .case-study-content > p {
+            text-align: left;
+            margin-bottom: 4rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .case-study-content .stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 220px;
+            max-width: 250px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--background-color);
+        }
+        
+        .stat h3 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin: 0;
+            font-weight: 700;
+            text-shadow: none;
+        }
+        
+        .stat p {
+            font-size: 1rem;
+            color: var(--text-color);
+            margin: 0.5rem 0 0;
+        }
+
+        .quotes-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #ccc;
+            padding: 1.5rem;
+            border-left: 3px solid var(--accent-color-purple);
+            background-color: var(--background-color);
+            border-radius: 0 8px 8px 0;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .quote footer {
+            font-style: normal;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 1rem;
+            text-align: right;
+        }
+        
+        /* =================================================================
+        Inquiry Form
+        ================================================================= */
+        .inquiry-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .inquiry-form input, .inquiry-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        
+        .inquiry-form input:focus, .inquiry-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .inquiry-form button {
+            width: 100%;
+        }
+
+        /* =================================================================
+        Footer
+        ================================================================= */
+        .main-footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background-color: var(--background-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .main-footer p {
+            color: var(--text-muted-color);
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        /* =================================================================
+        Responsive Design
+        ================================================================= */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1.5rem;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .hero h2 {
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 5rem 1.5rem;
+            }
+            .grid {
+                 grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand"><a href="#home">HOLODECK.XR</a></div>
+        <ul class="nav-links">
+            <li><a href="#why-holodeck">Why Holodeck?</a></li>
+            <li><a href="#case-study">Case Study</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <h1>Step Into Your Vision</h1>
+        <h2>The world's highest fidelity wireless virtual reality experience for enterprise.</h2>
+        <a href="#contact" class="cta-button">Schedule a Consultation</a>
+    </header>
+
+    <main>
+        <!-- Why Holodeck? Section -->
+        <section id="why-holodeck" class="section">
+            <h2 class="section-title">Pixels Are Cheaper Than Atoms</h2>
+            <p class="section-subtitle">In a world of limitless ideas, physical limitations should not be your boundary. The Holodeck offers a cutting-edge, untethered, and photorealistic virtual reality experience that allows you to build, train, and sell in ways never before possible.</p>
+            <div class="grid">
+                <div class="grid-item">
+                    <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <h3>Real Estate</h3>
+                    <p>Immersive virtual showrooms that captivate buyers, triple conversion rates, and accelerate sales cycles.</p>
+                </div>
+                <div class="grid-item">
+                     <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <h3>Training & Simulation</h3>
+                    <p>High-stakes training for sports, military, and industrial applications in a safe, repeatable, and hyper-realistic environment.</p>
+                </div>
+                <div class="grid-item">
+                    <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path><path d="M2 12l6-6 6 6-6 6-6-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M10 12l6-6 6 6-6 6-6-6z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    <h3>Architecture & Engineering</h3>
+                    <p>Walk through your creations at a 1:1 scale, enabling true-to-life design validation and real-time collaboration before breaking ground.</p>
+                </div>
+                <div class="grid-item">
+                    <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <h3>Design</h3>
+                    <p>Manifest floorplans, CAD files, and blueprints in true scale, revolutionizing the creative and logistical process from concept to completion.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Study Section -->
+        <section id="case-study" class="section section-dark">
+            <h2 class="section-title">A Proven Revolution</h2>
+            <p class="section-subtitle">The Holodeck technology was first implemented for the prestigious Four Seasons Private Residences Lake Austin, a project that redefined luxury real estate sales.</p>
+            <div class="case-study-content">
+                <p>In collaboration with Jonathan Coon, DBOX, PureBlink, Agile Lens, WNMP Tech, and Tera Tech, we created a groundbreaking 6,000 sq. ft. walkable VR experience. For the first time, prospective buyers could explore the stunning property, its world-class amenities, and exquisite residences in a 1:1 scale, complete with the actual furniture and finishes of the final product.</p>
+                <div class="stats">
+                    <div class="stat">
+                        <h3>3x</h3>
+                        <p>Tripled Conversion Rate</p>
+                    </div>
+                    <div class="stat">
+                        <h3>$300M+</h3>
+                        <p>In Resulting Sales</p>
+                    </div>
+                     <div class="stat">
+                        <h3>1000s</h3>
+                        <p>of Comfortable Users</p>
+                    </div>
+                </div>
+                <div class="quotes-container">
+                    <blockquote class="quote">
+                        <p>"The best VR I've ever seen."</p>
+                        <footer>- John Carmack</footer>
+                    </blockquote>
+                    <blockquote class="quote">
+                        <p>"The best PCVR."</p>
+                        <footer>- Andrew Bosworth</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section">
+            <h2 class="section-title">Your Vision, Virtually Realized</h2>
+            <p class="section-subtitle">We provide end-to-end solutions to bring your virtual reality ambitions to life.</p>
+             <div class="grid">
+                <div class="grid-item">
+                     <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636L4.222 4.222m15.556 15.556L18.364 18.364M18.364 5.636L19.778 4.222m-15.556 15.556L5.636 18.364M12 12a5 5 0 11-10 0 5 5 0 0110 0z"></path></svg>
+                    <h3>Bespoke Experience Development</h3>
+                    <p>Our team of world-class developers and artists will work with you to design and build a custom Holodeck experience tailored to your specific needs and goals.</p>
+                </div>
+                <div class="grid-item">
+                    <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <h3>Implementation & Staffing</h3>
+                    <p>We ensure your staff is fully equipped to operate the experience. You can also retain our tenured experts to staff your Holodeck for flawless execution.</p>
+                </div>
+                <div class="grid-item">
+                     <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9V3m-9 9h18"></path></svg>
+                    <h3>Remote Support & Maintenance</h3>
+                    <p>Our dedicated team provides ongoing remote support and maintenance to guarantee your virtual environment is always running at peak performance.</p>
+                </div>
+                <div class="grid-item">
+                    <svg class="grid-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <h3>Scalable Solutions</h3>
+                    <p>We design, build, and tailor experiences for all sizes of companies, endeavors, spaces, and budgets, ensuring a perfect fit for your vision.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section section-dark">
+            <h2 class="section-title">Let's Build the Future, Together.</h2>
+            <p class="section-subtitle">Ready to unlock the power of virtual reality for your business? Reach out to us for a consultation and discover what The Holodeck can do for you.</p>
+            <!-- 
+                IMPORTANT: To make this form work, sign up for a free account at https://formspree.io/
+                and replace 'YOUR_FORM_ID' with your actual form ID.
+            -->
+            <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="inquiry-form">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="text" name="company" placeholder="Your Company">
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" rows="5" placeholder="Tell us about your project" required></textarea>
+                <button type="submit" class="cta-button">Submit Inquiry</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2025 Holodeck XR. All Rights Reserved.</p>
+        <p>A new dimension of possibility.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JavaScript for reveal on scroll animation
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // JavaScript for smooth scrolling with offset for fixed navbar
+            const navLinks = document.querySelectorAll('a[href^="#"]');
+            const navbar = document.querySelector('.navbar');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent the default anchor link behavior
+                    const targetId = this.getAttribute('href');
+                    // Special case for home link
+                    if (targetId === '#home') {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        return;
+                    }
+                    
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        const navbarHeight = navbar.offsetHeight;
+                        // Calculate position to scroll to: element's top position relative to the document, minus the navbar height
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+
+                        // Scroll to the calculated position
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
